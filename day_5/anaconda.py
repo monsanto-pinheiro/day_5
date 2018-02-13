@@ -22,6 +22,8 @@ import os
 from datetime import datetime
 from optparse import OptionParser
 
+from CodonsTable import CodonsTable
+
 __all__ = []
 __version__ = 0.1
 __date__ = '2018-02-09'
@@ -53,7 +55,7 @@ def main(argv=None):
 		parser.add_option("-v", "--verbose", dest="verbose", action="count", default=0, help="set verbosity level [default: 0]")
 
 		# set defaults
-		parser.set_defaults(outfile="./out.txt", infile="./in.txt")
+		parser.set_defaults(outfile="./out.csv", infile="./sequence.txt")
 
 		# process options
 		(opts, args) = parser.parse_args(argv)
@@ -74,7 +76,13 @@ def main(argv=None):
 			print("Error: file does not exist " + opts.infile)
 			return 1
 		
+		### count codons
+		codons_table = CodonsTable()
+		codons_table.count_codons(opts.infile)
 		
+		## save results
+		codons_table.save_table_in_file(opts.outfile)
+		print('File saved: ' + opts.outfile)
 		return 0
 	
 	except Exception as e:
